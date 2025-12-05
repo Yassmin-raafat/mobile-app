@@ -2,7 +2,7 @@
 
 A beautiful Flutter mobile application for tracking meals using the 80/20 rule (80% nourishing, 20% flexible meals).
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -154,13 +154,13 @@ lib/
 
 ### Features
 
-- ✨ Modern, gradient-based UI design
-- 📊 80/20 meal tracking (Nourishing vs Flexible)
-- 📈 Progress visualization with charts
-- 💾 Local data persistence
-- 🔔 Meal logging notifications
-- 🎯 Achievement system
-- 📱 Responsive design
+-  Modern, gradient-based UI design
+-  80/20 meal tracking (Nourishing vs Flexible)
+-  Progress visualization with charts
+-  Local data persistence
+-  Meal logging notifications
+-  Achievement system
+-  Responsive design
 
 ### Dependencies
 
@@ -178,3 +178,4 @@ lib/
 ---
 
 **Happy Coding! 🎉**
+
