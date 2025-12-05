@@ -177,5 +177,6 @@ lib/
 
 ---
 
-**Happy Coding! 🎉**
+**Happy Coding! **
+
 
