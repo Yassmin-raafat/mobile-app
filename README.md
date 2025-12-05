@@ -3,6 +3,8 @@
 A beautiful Flutter mobile application for tracking meals using the 80/20 rule (80% nourishing, 20% flexible meals).
 
 ##  Getting Started
+[demo video phase2 ](https://drive.google.com/file/d/1b1yj3N9COOBB5abGwB-uP6zeMQGUSfb-/view?usp=sharing)
+
 
 ### Prerequisites
 
@@ -17,34 +19,6 @@ Before running this app, make sure you have:
    - **For iOS**: Xcode (macOS only)
    - **For Web**: Chrome browser
    - **For Windows**: Visual Studio with C++ build tools
-
-3. **Device/Emulator**:
-   - Android Emulator or physical Android device
-   - iOS Simulator or physical iOS device (macOS only)
-   - Or run on web/desktop
-
-### Installation Steps
-
-1. **Clone or navigate to the project directory**
-   ```bash
-   cd "d:\Downloads\projects\app project\mobile-app"
-   ```
-
-2. **Get Flutter dependencies**
-   ```bash
-   flutter pub get
-   ```
-   This will install all required packages listed in `pubspec.yaml`:
-   - `provider` - State management
-   - `http` - API calls
-   - `shared_preferences` - Local storage
-   - `flutter_local_notifications` - Notifications
-
-3. **Verify Flutter setup**
-   ```bash
-   flutter doctor
-   ```
-   Make sure all required components show a checkmark ✓
 
 ### Running the App
 
@@ -82,56 +56,6 @@ flutter devices
 flutter run -d <device-id>
 ```
 
-### Common Commands
-
-```bash
-# Clean build files
-flutter clean
-
-# Get dependencies again
-flutter pub get
-
-# Check for issues
-flutter analyze
-
-# Run tests
-flutter test
-
-# Build APK (Android)
-flutter build apk
-
-# Build iOS app
-flutter build ios
-```
-
-### Troubleshooting
-
-#### Issue: "No devices found"
-- **Solution**: Start an emulator/simulator or connect a physical device
-  - Android: Open Android Studio → AVD Manager → Start emulator
-  - iOS: Open Xcode → Window → Devices and Simulators → Start simulator
-
-#### Issue: "Pub get failed"
-- **Solution**: 
-  ```bash
-  flutter clean
-  flutter pub get
-  ```
-
-#### Issue: "SDK version mismatch"
-- **Solution**: Update Flutter SDK
-  ```bash
-  flutter upgrade
-  ```
-
-#### Issue: "Build failed"
-- **Solution**: 
-  ```bash
-  flutter clean
-  flutter pub get
-  flutter run
-  ```
-
 ### Project Structure
 
 ```
@@ -162,21 +86,9 @@ lib/
 -  Achievement system
 -  Responsive design
 
-### Dependencies
-
-- `provider: ^6.1.2` - State management
-- `http: ^1.2.0` - HTTP requests for API
-- `shared_preferences: ^2.2.2` - Local storage
-- `flutter_local_notifications: ^17.1.2` - Notifications
-
-### Notes
-
-- The app uses an external API (adviceslip.com) for daily wellness tips
-- Data is stored locally on the device
-- Notifications require proper platform setup (Android/iOS permissions)
 
 ---
 
-**Happy Coding! **
+
 
 
