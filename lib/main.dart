@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-// استيراد الصفحات
+
 import 'screens/home_screen.dart';
 import 'screens/tracker_screen.dart';
 import 'screens/progress_screen.dart';
@@ -9,14 +10,18 @@ import 'screens/profile_screen.dart';
 // Provider
 import 'package:provider/provider.dart';
 import 'providers/meal_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Repository for loading saved meals
 import 'data/meal_repository.dart';
 import 'services/notification_service.dart';
+import 'auth/auth_service.dart';
+import 'wrapper.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();       // مهم قبل أي async
+  await Firebase.initializeApp();
   await MealRepository.loadMeals();  
    await NotificationService.init();                // تحميل البيانات من التخزين
   runApp(const BiteBrightApp());
@@ -27,8 +32,9 @@ class BiteBrightApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => MealProvider(), // Phase 2 core logic
+    return StreamProvider<User?>(
+      create: (_) => AuthService().user,
+      initialData: null,
       child: MaterialApp(
         title: 'Bite Bright',
         theme: ThemeData(
@@ -84,7 +90,7 @@ class BiteBrightApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const MainNavigation(),
+        home: const Wrapper(),
         debugShowCheckedModeBanner: false,
       ),
     );
@@ -111,7 +117,10 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[_index],
+      body: IndexedStack(
+        index: _index,
+        children: pages,
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
