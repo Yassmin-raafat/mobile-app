@@ -15,6 +15,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimationWelcome;
+  late Animation<Offset> _slideAnimationSubtitle;
+  late Animation<double> _fadeAnimationAdviceCard;
+  late Animation<Offset> _slideAnimationAdviceCard;
+  late Animation<double> _fadeAnimationTodayCard;
+  late Animation<Offset> _slideAnimationTodayCard;
+  late Animation<double> _fadeAnimationWeeklyBalanceCard;
+  late Animation<Offset> _slideAnimationWeeklyBalanceCard;
 
   //  API text
   String advice = "Loading daily wellness tip...";
@@ -24,12 +32,66 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 1200), // Increased duration for a smoother overall animation
     );
+
     _fadeAnimation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+
+    _slideAnimationWelcome = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
+    ));
+
+    _slideAnimationSubtitle = Tween<Offset>(
+      begin: const Offset(0, 0.5),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.2, 0.8, curve: Curves.easeOut),
+    ));
+
+    _fadeAnimationAdviceCard = CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.4, 1.0, curve: Curves.easeIn),
+    );
+    _slideAnimationAdviceCard = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
+    ));
+
+    _fadeAnimationTodayCard = CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.6, 1.0, curve: Curves.easeIn),
+    );
+    _slideAnimationTodayCard = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.6, 1.0, curve: Curves.easeOut),
+    ));
+
+    _fadeAnimationWeeklyBalanceCard = CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.8, 1.0, curve: Curves.easeIn),
+    );
+    _slideAnimationWeeklyBalanceCard = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.8, 1.0, curve: Curves.easeOut),
+    ));
+
     _animationController.forward();
     fetchAdvice(); // get API data when screen opens
   }
@@ -175,145 +237,163 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Welcome back ',
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                color: const Color(0xFF1A1A1A),
-              ),
+        SlideTransition(
+          position: _slideAnimationWelcome,
+          child: Text(
+            'Welcome back ',
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                  color: const Color(0xFF1A1A1A),
+                ),
+          ),
         ),
         const SizedBox(height: 8),
-        Text(
-          "Let's keep your 80/20 balance on track today.", // fixed apostrophe
-          style: Theme.of(context).textTheme.bodyLarge,
+        SlideTransition(
+          position: _slideAnimationSubtitle,
+          child: Text(
+            "Let's keep your 80/20 balance on track today.", // fixed apostrophe
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildAdviceCard(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFFE66D),
-            Color(0xFFFFD93D),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFFE66D).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    return FadeTransition(
+      opacity: _fadeAnimationAdviceCard,
+      child: SlideTransition(
+        position: _slideAnimationAdviceCard,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFFFFE66D),
+                Color(0xFFFFD93D),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFFFE66D).withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.3),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.lightbulb_rounded,
-                color: Color(0xFF1A1A1A),
-                size: 40,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              advice,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF1A1A1A),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.3),
+                    shape: BoxShape.circle,
                   ),
+                  child: const Icon(
+                    Icons.lightbulb_rounded,
+                    color: Color(0xFF1A1A1A),
+                    size: 40,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  advice,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF1A1A1A),
+                      ),
+                ),
+                const SizedBox(height: 16),
+                TextButton.icon(
+                  onPressed: fetchAdvice,
+                  icon: const Icon(Icons.refresh_rounded, size: 18),
+                  label: const Text("Get Another Tip"),
+                  style: TextButton.styleFrom(
+                    foregroundColor: const Color(0xFF1A1A1A),
+                    backgroundColor: Colors.white.withOpacity(0.5),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextButton.icon(
-              onPressed: fetchAdvice,
-              icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text("Get Another Tip"),
-              style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFF1A1A1A),
-                backgroundColor: Colors.white.withOpacity(0.5),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildTodayCard(BuildContext context, int count) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
+    return FadeTransition(
+      opacity: _fadeAnimationTodayCard,
+      child: SlideTransition(
+        position: _slideAnimationTodayCard,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFFF6B35), Color(0xFFFF8C61)],
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(
-                Icons.today_rounded,
-                color: Colors.white,
-                size: 32,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Today's Meals", // fixed apostrophe
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '$count meal${count != 1 ? 's' : ''} logged today',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF6B35).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '$count',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: const Color(0xFFFF6B35),
-                      fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFF6B35), Color(0xFFFF8C61)],
                     ),
-              ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.today_rounded,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Today's Meals", // fixed apostrophe
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$count meal${count != 1 ? 's' : ''} logged today',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF6B35).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '$count',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: const Color(0xFFFF6B35),
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -327,98 +407,104 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     int nourishingWeek,
     int flexibleWeek,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4ECDC4), Color(0xFF6EDDD6)],
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.insights_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  "This Week's Balance",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            if (totalWeek == 0)
-              Center(
-                child: Text(
-                  "No meals this week yet.",
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              )
-            else ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildBalanceItem(
-                    context,
-                    "Nourishing",
-                    nourishingPercent,
-                    nourishingWeek,
-                    const Color(0xFF4ECDC4),
-                    Icons.eco_rounded,
-                  ),
-                  _buildBalanceItem(
-                    context,
-                    "Flexible",
-                    flexiblePercent,
-                    flexibleWeek,
-                    const Color(0xFFFF6B35),
-                    Icons.cake_rounded,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildProgressBar(
-                      nourishingPercent / 100,
-                      const Color(0xFF4ECDC4),
-                      "Nourishing $nourishingPercent%",
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildProgressBar(
-                      flexiblePercent / 100,
-                      const Color(0xFFFF6B35),
-                      "Flexible $flexiblePercent%",
-                    ),
-                  ),
-                ],
+    return FadeTransition(
+      opacity: _fadeAnimationWeeklyBalanceCard,
+      child: SlideTransition(
+        position: _slideAnimationWeeklyBalanceCard,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 5),
               ),
             ],
-          ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4ECDC4), Color(0xFF6EDDD6)],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.insights_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      "This Week's Balance",
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                if (totalWeek == 0)
+                  Center(
+                    child: Text(
+                      "No meals this week yet.",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  )
+                else ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildBalanceItem(
+                        context,
+                        "Nourishing",
+                        nourishingPercent,
+                        nourishingWeek,
+                        const Color(0xFF4ECDC4),
+                        Icons.eco_rounded,
+                      ),
+                      _buildBalanceItem(
+                        context,
+                        "Flexible",
+                        flexiblePercent,
+                        flexibleWeek,
+                        const Color(0xFFFF6B35),
+                        Icons.cake_rounded,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildProgressBar(
+                          nourishingPercent / 100,
+                          const Color(0xFF4ECDC4),
+                          "Nourishing $nourishingPercent%",
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildProgressBar(
+                          flexiblePercent / 100,
+                          const Color(0xFFFF6B35),
+                          "Flexible $flexiblePercent%",
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -495,3 +581,4 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 }
+
